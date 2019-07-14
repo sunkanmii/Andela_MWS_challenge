@@ -175,16 +175,21 @@
       
       const formatAsMoney = (amount, buyerCountry) => {
         
-        amount.toLocaleString();
-        buyerCountry.toLocaleString();
+        const countryInfo = countries.find((element, ind) => {
+          if (buyerCountry === element.country){
+            return element;
+          }
+          else if(buyerCountry !== element.country && ind === (countries.length - 1)){
+            return country[0];
+          }
+        }) 
         
-        countries.forEach(function(element, ind){
-           
-          if(buyerCountry !== element.country && ind === (countries.length - 1)){
-          	buyerCountry = countries[0].country;
-        	}
-       	})
-        
+        amount = amount.toLocaleString(
+          countryInfo.code,
+          {
+            style: 'currency',
+            currency: countryInfo.currency}
+           );
       }
  		
       const detectCardType = ({target}) => {
@@ -286,6 +291,7 @@
       ];
       
       const startApp = () => {
+        
         fetchBill();
       };
 
