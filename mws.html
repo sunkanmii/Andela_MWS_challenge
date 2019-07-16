@@ -206,7 +206,7 @@
         
         appState.billFormatted = formatAsMoney(appState.bill, appState.country);
         
-     	  document.querySelector('[data-bill]').textContent = appState.billFormatted;
+     	document.querySelector('[data-bill]').textContent = appState.billFormatted;
         
         uiCanInteract();
       }
@@ -258,19 +258,29 @@
           country: 'Ghana'
         }
       ];
-          
-    const formatAsMoney = (amount, buyerCountry) => {
- 		const countryInfo = countries.find(element => buyerCountry === element.country);
-        amount = amount.toLocalString("en-US", {
-          style: 'currency',
-          currency: !countryInfo ? 'USD' : countryInfo.currency
-        })
-        return amount;
+      
+      const formatAsMoney = (amount, buyerCountry) => {
+        
+        const countryInfo = countries.find((element, ind) => {
+          if (buyerCountry === element.country){
+            return element;
+          }
+          else if(buyerCountry !== element.country && ind === (countries.length - 1)){
+            return country[0];
+          }
+        }) 
+        
+        amount = amount.toLocaleString(
+          countryInfo.code,
+          {
+            style: 'currency',
+            currency: countryInfo.currency}
+           );
       }
       
       const fetchBill = () => {
       
-      const api = `https://randomapi.com/api/006b08a801d82d0c9824dcfdfdfa3b3c`;
+      const api = 'https://randomapi.com/api/006b08a801d82d0c9824dcfdfdfa3b3c';
          
         fetch(api)
         .then(response => response.json())
