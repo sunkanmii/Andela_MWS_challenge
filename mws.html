@@ -172,25 +172,6 @@
       };
       
       const appState = {};
-      
-      const formatAsMoney = (amount, buyerCountry) => {
-        
-        const countryInfo = countries.find((element, ind) => {
-          if (buyerCountry === element.country){
-            return element;
-          }
-          else if(buyerCountry !== element.country && ind === (countries.length - 1)){
-            return country[0];
-          }
-        }) 
-        
-        amount = amount.toLocaleString(
-          countryInfo.code,
-          {
-            style: 'currency',
-            currency: countryInfo.currency}
-           );
-      }
  		
       const detectCardType = ({target}) => {
         
@@ -218,28 +199,16 @@
         appState.country = buyerCountry;
         
         const reducer = (accumulator, currentValue) =>{
-          return (accumulator.price * accumulator.qty)+(currentValue.price * currentValue.qty);
+          return (accumulator.price * accumulator.qty) + (currentValue.price * currentValue.qty);
         }
         
         appState.bill = itemsInCart.reduce(reducer);
         
         appState.billFormatted = formatAsMoney(appState.bill, appState.country);
         
-     	document.querySelector('[data-bill]').textContent = appState.billFormatted;
+     	  document.querySelector('[data-bill]').textContent = appState.billFormatted;
         
         uiCanInteract();
-      }
-            
-      const fetchBill = () => {
-      
-      const api = `https://randomapi.com/api/006b08a801d82d0c9824dcfdfdfa3b3c`;
-         
-        fetch(api)
-        .then(res => res.json())
-        .then(data => displayCartTotal(data))
-        .catch(error => console.log(error))
-        
-        return;
       }
      
       const countries = [
@@ -289,9 +258,27 @@
           country: 'Ghana'
         }
       ];
+          
+    const formatAsMoney = (amount, buyerCountry) => {
+ 		const countryInfo = countries.find(element => buyerCountry === element.country);
+        amount = amount.toLocalString("en-US", {
+          style: 'currency',
+          currency: !countryInfo ? 'USD' : countryInfo.currency
+        })
+        return amount;
+      }
       
-      const startApp = () => {
+      const fetchBill = () => {
+      
+      const api = `https://randomapi.com/api/006b08a801d82d0c9824dcfdfdfa3b3c`;
+         
+        fetch(api)
+        .then(response => response.json())
+        .then(data => displayCartTotal(data))
+        .catch(error => console.log("Error: " + error))
         
+      };
+      const startApp = () => {
         fetchBill();
       };
 
