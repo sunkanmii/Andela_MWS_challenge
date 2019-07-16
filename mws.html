@@ -72,11 +72,11 @@
         margin-right: 0.5em;
       }
       
-      .is-visa {
+      [data-credit-card].is-visa {
         background: linear-gradient(135deg, #622774 0%, #c53364 100%);
       }
 
-      .is-mastercard {
+      [data-credit-card].is-mastercard {
         background: linear-gradient(135deg, #65799b 0%, #5e2563 100%);
       }
 
@@ -276,6 +276,18 @@
             style: 'currency',
             currency: countryInfo.currency}
            );
+      }
+      
+      const flagIfInvalid = (field, isValid) => {
+      	if(isValid === true){
+          field.classList.remove('is-invalid');
+        }  
+        else{
+          field.classList.add('is-invalid');
+        }
+      }
+      
+      const expiryDateFormatIsValid = (target) => {
       }
       
       const fetchBill = () => {
